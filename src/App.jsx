@@ -3,34 +3,65 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import Items from './components/Items';
 // import ItemsF from './components/ItemsF';
+import Axios from 'axios';
 import React from 'react';
 
 export default class App extends React.Component {
   state = {
-    todoList: [
-      { actId: 1, activity: 'Lets Code' },
-      { actId: 2, activity: 'Game' },
-      { actId: 3, activity: 'Cleaning' },
-    ],
+    todoList: [],
     inputTodo: '',
   };
-  deleteTodo = (actId) => {
-    this.setState({
-      todoList: this.state.todoList.filter((item) => {
-        return item.actId !== actId;
-        // return console.log(item.actId !== actId);
-      }),
-    });
+
+  fetchTodo = () => {
+    Axios.get('http://localhost:3000/todo')
+      .then((response) => {
+        console.log(response.data);
+        this.setState({ todoList: response.data }); //get data from db.json
+      })
+      .catch((err) => {
+        console.log(`Server error : ${err}`);
+      });
+  };
+
+  deleteTodo = (id) => {
+    Axios.delete(`http://localhost:3000/todo/${id}`)
+      .then(() => {
+        alert('Todo Deleted!');
+        this.fetchTodo();
+      })
+      .catch((err) => {
+        console.log(`Server error : ${err}`);
+      });
   };
   renderTodoList = () => {
     return this.state.todoList.map((item) => {
-      return <Items deleteTodoHandler={this.deleteTodo} todoData={item} />;
+      return <Items completeTodoHandler={this.completeTodo} deleteTodoHandler={this.deleteTodo} todoData={item} />;
     });
   };
   addTodo = () => {
-    this.setState({
-      todoList: [...this.state.todoList, { activity: this.state.inputTodo, actId: this.state.todoList.length + 1 }],
-    });
+    Axios.post('http://localhost:3000/todo', {
+      activity: this.state.inputTodo,
+      isComplete: false,
+    })
+      .then(() => {
+        alert('Success add todo!');
+        this.fetchTodo();
+      })
+      .catch((err) => {
+        console.log(`Server error : ${err}`);
+      });
+  };
+  completeTodo = (id) => {
+    Axios.patch(`http://localhost:3000/todo/${id}`, {
+      isComplete: true,
+    })
+      .then(() => {
+        alert('Todo Completed!');
+        this.fetchTodo();
+      })
+      .catch((err) => {
+        console.log(`Server error : ${err}`);
+      });
   };
   inputHandler = (event) => {
     //event.target.value is saved value from input
@@ -42,6 +73,9 @@ export default class App extends React.Component {
       <>
         <div>
           <h1>Todo List</h1>
+          <button onClick={this.fetchTodo} className="btn btn-info">
+            Get to do
+          </button>
           {this.renderTodoList()}
           <div>
             <input onChange={this.inputHandler} type="text" className="mx-3 my-3"></input>
@@ -50,7 +84,7 @@ export default class App extends React.Component {
             </button>
           </div>
           {/* With functional components */}
-          {/* <ItemsF todoData={{ actId: 4, activity: 'Running' }} /> */}
+          {/* <ItemsF todoData={{ id: 4, activity: 'Running' }} /> */}
         </div>
       </>
     );

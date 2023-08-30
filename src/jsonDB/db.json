@@ -1,0 +1,25 @@
+{
+  "todo": [
+    {
+      "id": 1,
+      "activity": "Lets Code",
+      "isComplete": true
+    },
+    {
+      "id": 2,
+      "activity": "Game",
+      "isComplete": true
+    },
+    {
+      "id": 3,
+      "activity": "Cleaning",
+      "isComplete": false
+    },
+    {
+      "id": 4,
+      "activity": "Running",
+      "isComplete": false
+    }
+  ],
+  "users": []
+}
