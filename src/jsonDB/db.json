@@ -16,9 +16,9 @@
       "isComplete": false
     },
     {
-      "id": 4,
       "activity": "Running",
-      "isComplete": false
+      "isComplete": false,
+      "id": 4
     }
   ],
   "users": []

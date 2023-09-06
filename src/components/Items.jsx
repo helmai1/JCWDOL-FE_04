@@ -8,6 +8,9 @@ export default class Items extends React.Component {
   btnHandler(type) {
     alert(`You click button ${type}`);
   }
+  // componentWillUnmount() {
+  //   alert('Component will Unmount');
+  // }
   render() {
     return (
       <div className="my-2 d-flex flex-row justify-content-between todo-container align-items-center">
